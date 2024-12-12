@@ -126,8 +126,11 @@
 
         if (getValue) {
             let parsedG = JSON.parse(getValue);
-            g = { ...g, ...parsedG };
-        }
+            g.value = parsedG.value;
+            g.x = parsedG.x;
+            g.eventValue = parsedG.eventValue;
+            g.w = parsedG.w;};
+        
     }
 
     function klik() {
