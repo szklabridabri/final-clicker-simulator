@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clicker Game</title>
+    <style>
+        * {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(to bottom right, #6a11cb, #2575fc);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        button {
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: scale(1.1);
+            opacity: 0.9;
+        }
+        .click-style {
+            width: 200px;
+            height: 70px;
+            background-color: #ff6f61;
+            color: white;
+            font-weight: bold;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        #showValue {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 2rem;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        #upgrades {
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        #upgrades button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 10px;
+        }
+        #eventDiv {
+            margin: 20px;
+        }
+        .imageless {
+            background-color: #ffc107;
+            color: #000;
+            font-size: 1rem;
+            border-radius: 10px;
+        }
+        #saveValueId {
+            background-color: #007bff;
+            color: white;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="klik()" class="click-style">Click!</button>
+    <p id="showValue">0$</p>
+    <div id="upgrades">
+        <button id="upg1Id" onclick="upg1()">+1/click ($150)</button>
+        <button id="upg3Id" onclick="upg3()">+3/click ($450)</button>
+        <button id="upg5Id" onclick="upg5()">+5/click ($750)</button>
+        <button id="upg10Id" onclick="upg10()">+10/click ($1500)</button>
+        <button id="upg20Id" onclick="upg20()">+20/click ($2850, -5%!)</button>
+        <!--<button onclick="QnA()">HACK BUTTON</button>-->
+    </div>
+    <div id="eventDiv">
+        <p>BONUS:</p>
+        <button onclick="imgless()" id="nonImageless" class="imageless">0/25 Needed</button>
+    </div>
+    <button id="saveValueId" onclick="saveValue()">Save!</button>
+</body>
+<script>
+    let g = {
+        value: 0,
+        x: 1,
+        eventValue: 0,
+        a: 150,
+        b: 450,
+        c: 750,
+        d: 1500,
+        e: 2850,
+    };
+
+    function saveValue() {
+        localStorage.setItem('zycie', JSON.stringify(g));
+        loadStats();
+    }
+
+    function loadStats() {
+        let getValue = localStorage.getItem('zycie');
+
+        if (getValue) {
+            let parsedG = JSON.parse(getValue);
+            g = { ...g, ...parsedG };
+        }
+    }
+
+    function klik() {
+        g.value += g.x;
+    }
+
+    function QnA() {
+        g.value += 1500;
+    }
+
+    function imgless() {
+        if (g.eventValue >= 25) {
+            let mathRandom = Math.floor(Math.random() * 100);
+            g.value += mathRandom * 10;
+            g.eventValue -= 25;
+        }
+    }
+
+    document.addEventListener('click', function () {
+        document.getElementById('showValue').innerText = g.value + '$';
+        document.getElementById('nonImageless').innerHTML = g.eventValue + '/25 Needed<br>PRIZE: $100-$1000';
+    });
+
+    window.onload = function () {
+        loadStats();
+    };
+
+    function upg1() {
+        if (g.value >= g.a) {
+            g.x += 1;
+            g.eventValue += 1;
+            g.value -= g.a;
+            g.a += 150;
+            document.getElementById('upg1Id').innerText = '+1/click (' + g.a + '$)';
+        }
+    }
+    function upg3() {
+        if (g.value >= g.b) {
+            g.x += 3;
+            g.value -= g.b;
+            g.b += 450;
+            document.getElementById('upg3Id').innerText = '+3/click (' + g.b + '$)';
+            g.eventValue += 3;
+        }
+    }
+    function upg5() {
+        if (g.value >= g.c) {
+            g.x += 5;
+            g.value -= g.c;
+            g.c += 750;
+            document.getElementById('upg5Id').innerText = '+5/click (' + g.c + '$)';
+            g.eventValue += 5;
+        }
+    }
+    function upg10() {
+        if (g.value >= g.d) {
+            g.x += 10;
+            g.value -= g.d;
+            g.d += 1500;
+            document.getElementById('upg10Id').innerText = '+10/click (' + g.d + '$)';
+            g.eventValue += 10;
+        }
+    }
+    function upg20() {
+        if (g.value >= g.e) {
+            g.x += 20;
+            g.value -= g.e;
+            g.e += 2850;
+            document.getElementById('upg20Id').innerText = '+20/click (' + g.e + '$)';
+            g.eventValue += 20;
+        }
+    }
+</script>
+</html>
